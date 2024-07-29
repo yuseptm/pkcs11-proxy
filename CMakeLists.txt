@@ -27,8 +27,14 @@ if (WIN32)
   include_directories("ext/include")
 
   add_library(dl STATIC IMPORTED)
-  set_property(TARGET dl PROPERTY
+  if("${CMAKE_C_COMPILER}" MATCHES ".*x86_64-w64-mingw32-gcc")
+    set_property(TARGET dl PROPERTY
+               IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/ext/win64/lib/libdl.dll.a)
+  endif()
+  if("${CMAKE_C_COMPILER}" MATCHES ".*i686-w64-mingw32-gcc")
+    set_property(TARGET dl PROPERTY
                IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/ext/lib/libdl.a)
+  endif()
   target_link_libraries (pkcs11-daemon ws2_32)
   target_link_libraries (pkcs11-proxy ws2_32)
 endif (WIN32)
